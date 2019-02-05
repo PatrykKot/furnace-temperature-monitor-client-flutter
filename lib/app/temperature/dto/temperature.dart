@@ -1,4 +1,4 @@
-import 'package:ftm_client_flutter/app/temperature/sensor/dto/sensor.dart';
+import 'package:ftm_client_flutter/app/sensor/dto/sensor.dart';
 
 class LastTemperatureLogDto {
   int id;

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ftm_client_flutter/app/sensor/dto/sensor.dart';
+import 'package:ftm_client_flutter/app/sensor/page/addSensorPage.dart';
+import 'package:ftm_client_flutter/app/sensor/page/editSensorPage.dart';
 import 'package:ftm_client_flutter/app/temperature/dto/temperature.dart';
-import 'package:ftm_client_flutter/app/temperature/sensor/dto/sensor.dart';
+import 'package:ftm_client_flutter/app/temperature/page/temperatureHistoryPage.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -11,48 +14,72 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<LastTemperatureLogDto> temperatures = [
-    LastTemperatureLogDto(1, 24.5, SensorDto(1, 'Pokój')),
-    LastTemperatureLogDto(2, 34.5, SensorDto(2, 'Pokój 5')),
-    LastTemperatureLogDto(3, 23.5, SensorDto(3, 'Pokój 4')),
-    LastTemperatureLogDto(4, 56.5, SensorDto(4, 'Pokój 23')),
+    LastTemperatureLogDto(1, 24.5, SensorDto(1, 'Pokój', 'sdfsd')),
+    LastTemperatureLogDto(2, 34.5, SensorDto(2, 'Pokój 5', 'sdfsd')),
+    LastTemperatureLogDto(3, 23.5, SensorDto(3, 'Pokój 4', 'sdfsd')),
+    LastTemperatureLogDto(4, 56.5, SensorDto(4, 'Pokój 23', 'sdfsd')),
   ]; // TODO fetch from server
 
   _goToNewSensorsView() {
-    Navigator.pushNamed(context, '/addSensor');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AddSensorPage()));
   }
 
-  _showModal(sensorId) {
-    print(sensorId);
-
+  _showModal(SensorDto sensor) {
     showModalBottomSheet(
         context: context,
-        builder: (BuildContext context) {
-          return new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              new ListTile(
-                leading: new Icon(Icons.history),
-                title: new Text('Pokaż historię'),
-                onTap: () => {},
-              ),
-              new ListTile(
-                leading: new Icon(Icons.settings),
-                title: new Text('Edytuj czujnik'),
-                onTap: () => {},
-              ),
-              new ListTile(
-                leading: new Icon(Icons.delete),
-                title: new Text('Usuń czujnik'),
-                onTap: () => {},
-              ),
-            ],
-          );
-        });
+        builder: (context) =>
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new ListTile(
+                  leading: new Icon(Icons.history),
+                  title: new Text('Pokaż historię'),
+                  onTap: () {
+                    showSensorHistoryCalendar(sensor, context);
+                  },
+                ),
+                new ListTile(
+                  leading: new Icon(Icons.settings),
+                  title: new Text('Edytuj czujnik'),
+                  onTap: () {
+                    goToEditSensorPage(sensor, context);
+                  },
+                ),
+                new ListTile(
+                  leading: new Icon(Icons.delete),
+                  title: new Text('Usuń czujnik'),
+                  onTap: () => {},
+                ),
+              ],
+            ));
+  }
+
+  void goToEditSensorPage(SensorDto sensor, BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EditSensorPage(sensor: sensor)));
+  }
+
+  void showSensorHistoryCalendar(SensorDto sensor, BuildContext context) async {
+    final DateTime pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1970),
+        lastDate: DateTime.now());
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                TemperatureHistoryPage(
+                    sensor: sensor, initialDate: pickedDate)));
   }
 
   _generateTemperatureCard(LastTemperatureLogDto temperature) {
-    return InkWell(
-        onTap: () => _showModal(temperature.sensor.id),
+    return GestureDetector(
+        onTap: () => _showModal(temperature.sensor),
         child: Card(
             child: Column(
           children: <Widget>[
