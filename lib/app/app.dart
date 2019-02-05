@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ftm_client_flutter/app/home/home.dart';
+import 'package:ftm_client_flutter/app/temperature/page/homePage.dart';
+import 'package:ftm_client_flutter/app/temperature/sensor/page/addSensorPage.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -9,7 +10,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/addSensor': (context) => AddSensorPage()
+      },
     );
   }
 }
