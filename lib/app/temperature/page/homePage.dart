@@ -69,12 +69,14 @@ class _HomePageState extends State<HomePage> {
         firstDate: DateTime(1970),
         lastDate: DateTime.now());
 
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                TemperatureHistoryPage(
-                    sensor: sensor, initialDate: pickedDate)));
+    if (pickedDate != null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  TemperatureHistoryPage(
+                      sensor: sensor, initialDate: pickedDate)));
+    }
   }
 
   _generateTemperatureCard(LastTemperatureLogDto temperature) {
