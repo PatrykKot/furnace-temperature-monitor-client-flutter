@@ -1,9 +1,10 @@
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:ftm_client_flutter/app/component/chart/chart.dart';
 import 'package:ftm_client_flutter/app/sensor/dto/sensor.dart';
 
 class TemperatureHistoryPage extends StatefulWidget {
-  TemperatureHistoryPage({Key key, @required this.initialDate, @required this.sensor})
+  TemperatureHistoryPage(
+      {Key key, @required this.initialDate, @required this.sensor})
       : super(key: key);
 
   final DateTime initialDate;
@@ -22,12 +23,20 @@ class _TemperatureHistoryPageState extends State<TemperatureHistoryPage> {
 
   DateTime initialDate;
   SensorDto sensor;
-  List<charts.Series> seriesList;
+
+  List<ChartData> series = [
+    ChartData(date: DateTime(2019, 1, 1), value: 20),
+    ChartData(date: DateTime(2019, 1, 2), value: 22),
+    ChartData(date: DateTime(2019, 1, 3), value: 21),
+    ChartData(date: DateTime(2019, 1, 4), value: 25),
+    ChartData(date: DateTime(2019, 1, 5), value: 27)
+  ];
 
   @override
   void initState() {
     super.initState();
-    seriesList = _createSampleData();
+
+    // TODO create sample data
   }
 
   @override
@@ -36,39 +45,9 @@ class _TemperatureHistoryPageState extends State<TemperatureHistoryPage> {
       appBar: AppBar(
         title: Text('Historia temperatury'),
       ),
-      body: Container(
-        child: charts.TimeSeriesChart(
-          seriesList,
-          animate: true,
-          dateTimeFactory: const charts.LocalDateTimeFactory(),
-        ),
+      body: SizedBox.expand(
+        child: LineChart(series),
       ),
     );
   }
-
-  static List<charts.Series<SimpleTimeSeries, DateTime>> _createSampleData() {
-    final data = [
-      new SimpleTimeSeries(new DateTime(2017, 9, 19), 5),
-      new SimpleTimeSeries(new DateTime(2017, 9, 26), 25),
-      new SimpleTimeSeries(new DateTime(2017, 10, 3), 100),
-      new SimpleTimeSeries(new DateTime(2017, 10, 10), 75),
-    ];
-
-    return [
-      new charts.Series<SimpleTimeSeries, DateTime>(
-        id: 'Sales',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (SimpleTimeSeries sales, _) => sales.time,
-        measureFn: (SimpleTimeSeries sales, _) => sales.sales,
-        data: data,
-      )
-    ];
-  }
-}
-
-class SimpleTimeSeries {
-  final DateTime time;
-  final int sales;
-
-  SimpleTimeSeries(this.time, this.sales);
 }
